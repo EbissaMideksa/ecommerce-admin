@@ -3,6 +3,7 @@ import './ListProduct.css'
 import remove_icon from '../../assets/cross_icon.png'
 
 const ListProduct = () => {
+  const backUrl='https://ecommerce-backend-producing.up.railway.app'
 
   const [allproducts,setAllProducts] = useState([]);
 
@@ -17,7 +18,7 @@ const ListProduct = () => {
 
  const fetchProducts = async () => {
   try {
-    const response = await fetch('http://localhost:4000/all_products');
+    const response = await fetch(`${backUrl}/all_products`);
     const data = await response.json();
     console.log("Fetched products:", data);
     setAllProducts(data.products); // ✅ Correct: Extract actual array
@@ -61,7 +62,7 @@ const ListProduct = () => {
   
   const removeProduct = async (productId) => {
   try {
-    const response = await fetch(`http://localhost:4000/deleteproduct/${productId}`, {
+    const response = await fetch(`${backUrl}/deleteproduct/${productId}`, {
       method: 'DELETE',
     });
 

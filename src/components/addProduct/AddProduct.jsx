@@ -1,8 +1,9 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import './AddProduct.css'
 import upload_area from '../../assets/upload_area.svg'
 
 const AddProduct = () => {
+  const backUrl='https://ecommerce-backend-producing.up.railway.app'
 
   const [image, setImage] = useState(false);
 
@@ -62,6 +63,14 @@ const AddProduct = () => {
   }
 */
 
+useEffect(() => {
+  return () => {
+    if (image) {
+      URL.revokeObjectURL(image);
+    }
+  };
+}, [image]);
+
 const Add_product = async () => {
   let responseData;
   let product = productDetails;
@@ -69,7 +78,7 @@ const Add_product = async () => {
   let formData = new FormData();
   formData.append('product', image);
 
-  await fetch('http://localhost:4000/upload', {
+  await fetch(`${backUrl}/upload`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -91,7 +100,7 @@ const Add_product = async () => {
     product.image = responseData.imageUrl;
 
     // ✅ NOW SEND TO BACKEND TO SAVE TO DB
-    await fetch('http://localhost:4000/addproduct', {
+    await fetch(`${backUrl}/addproduct`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -142,7 +151,11 @@ const Add_product = async () => {
       </div>
       <div className="add-product-item-field">
         <label htmlFor="file-input">
-          <img onChange={handleImageChange} src={image? URL.createObjectURL(image) : upload_area} className='addproduct-thumbnail-img' alt="Upload Area" />
+           <img onChange={handleImageChange}
+             src={image? URL.createObjectURL(image)
+              : upload_area} className='addproduct-thumbnail-img'
+               alt="Upload Area" /> *
+        
         </label>
         <input type="file" id="file-input" hidden onChange={handleImageChange} />
       </div>
