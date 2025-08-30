@@ -261,6 +261,8 @@ const AddProduct = ({ onAdd }) => {
 export default AddProduct;
  */
 
+
+/*
 import React, { useState, useEffect } from 'react';
 import './AddProduct.css';
 import upload_area from '../../assets/upload_area.svg';
@@ -367,6 +369,131 @@ const AddProduct = ({ backUrl, allProducts, setAllProducts }) => {
       </div>
 
       <button onClick={Add_product} className='add-product-button'>Add Product</button>
+    </div>
+  );
+};
+
+export default AddProduct;
+*/
+
+import React, { useState } from 'react';
+import './AddProduct.css';
+
+const AddProduct = ({ backUrl, allProducts, setAllProducts, fetchProducts }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    old_price: '',
+    new_price: '',
+    category: '',
+    image: ''
+  });
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Handle input changes
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === "image" && files.length > 0) {
+      setFormData((prev) => ({ ...prev, image: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // ✅ Submit new product
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("old_price", formData.old_price);
+      form.append("new_price", formData.new_price);
+      form.append("category", formData.category);
+      if (formData.image) form.append("image", formData.image);
+
+      const response = await fetch(`${backUrl}/addproduct`, {
+        method: "POST",
+        body: form,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert("✅ Product added successfully!");
+
+        // Optimistic update
+        setAllProducts([result.product, ...allProducts]);
+
+        // Full refresh from backend
+        fetchProducts();
+
+        // Reset form
+        setFormData({
+          name: '',
+          old_price: '',
+          new_price: '',
+          category: '',
+          image: ''
+        });
+      } else {
+        alert("❌ Failed to add product: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("⚠️ Error adding product. Check console.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="add-product">
+      <h2>Add New Product</h2>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          name="name" 
+          placeholder="Product Name" 
+          value={formData.name} 
+          onChange={handleChange} 
+          required 
+        />
+        <input 
+          type="number" 
+          name="old_price" 
+          placeholder="Old Price" 
+          value={formData.old_price} 
+          onChange={handleChange} 
+          required 
+        />
+        <input 
+          type="number" 
+          name="new_price" 
+          placeholder="New Price" 
+          value={formData.new_price} 
+          onChange={handleChange} 
+          required 
+        />
+        <input 
+          type="text" 
+          name="category" 
+          placeholder="Category" 
+          value={formData.category} 
+          onChange={handleChange} 
+          required 
+        />
+        <input 
+          type="file" 
+          name="image" 
+          accept="image/*" 
+          onChange={handleChange} 
+        />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Adding..." : "Add Product"}
+        </button>
+      </form>
     </div>
   );
 };
