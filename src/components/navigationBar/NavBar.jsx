@@ -16,7 +16,7 @@ const NavBar = () => {
 export default NavBar
  */
 import React, { useState, useRef, useEffect } from 'react'
-import navLogo from '../../assets/nav-logo.svg'
+//import navLogo from '../../assets/nav-logo.svg'
 import './NavBar.css'
 
 const NavBar = () => {
@@ -40,7 +40,7 @@ const NavBar = () => {
   return (
     <div className="navbar">
       {/* App Logo */}
-      <img src={navLogo} alt="Logo" className="nav-logo" />
+     {/*  <img src={navLogo} alt="Logo" className="nav-logo" /> */}
 
       {/* Avatar + Dropdown */}
       <div className="nav-profile-container" ref={menuRef}>

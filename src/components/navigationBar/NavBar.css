@@ -10,25 +10,9 @@
 }
 
 .nav-logo {
-  width:  200px;
+  width: 200px;
 }
 
-.nav-profile {
-  width: 75px;
-}
-@media (max-width: 800px) {
-  .navbar {
-    padding: 15px 30px;
-  }
-
-  .nav-logo {
-    width: 150px;
-  }
-
-  .nav-profile {
-    width: 60px;
-  }
-}
 .nav-profile-container {
   position: relative;
 }
@@ -40,10 +24,20 @@
   padding: 6px;
   border-radius: 50%;
   transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-profile-btn:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure the SVG scales properly */
+.nav-profile-btn svg {
+  width: 40px;
+  height: 40px;
+  stroke: #333; /* avatar color */
 }
 
 /* Dropdown Menu */
@@ -77,4 +71,43 @@
 .dropdown-menu .logout {
   color: red;
   font-weight: bold;
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 15px 30px;
+  }
+
+  .nav-logo {
+    width: 150px;
+  }
+
+  .nav-profile-btn svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+.nav-profile-btn {
+  background: #f0f0f0;       /* light gray background */
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;        /* makes it a circle */
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;               /* fixed size for button */
+  height: 48px;              /* keeps it perfectly round */
+}
+
+.nav-profile-btn:hover {
+  background: #e0e0e0;       /* darker gray on hover */
+}
+
+/* Ensure the SVG fits inside the circle */
+.nav-profile-btn svg {
+  width: 28px;
+  height: 28px;
+  stroke: #555;              /* dark gray avatar color */
 }
