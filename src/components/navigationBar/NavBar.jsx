@@ -15,7 +15,7 @@ const NavBar = () => {
 
 export default NavBar
  */
-/* import React, { useState, useRef, useEffect } from 'react'
+ import React, { useState, useRef, useEffect } from 'react'
 
 //import navLogo from '../../assets/nav-logo.svg'
 import './NavBar.css'
@@ -71,7 +71,9 @@ const NavBar = () => {
 }
 
 export default NavBar
- */
+ 
+
+/*
 
 import React, { useState, useRef, useEffect } from 'react'
 import './NavBar.css'
@@ -95,8 +97,6 @@ const NavBar = () => {
 
   return (
     <div className="navbar">
-
-      {/* Avatar + Dropdown */}
       <div className="nav-profile-container" ref={menuRef}>
         <button className="nav-profile-btn" onClick={() => setOpen(!open)}>
           <svg
@@ -128,3 +128,4 @@ const NavBar = () => {
 }
 
 export default NavBar
+*/
