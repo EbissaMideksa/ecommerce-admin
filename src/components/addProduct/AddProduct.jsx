@@ -1,3 +1,4 @@
+
 /*
 import React, { useState, useEffect } from 'react';
 import './AddProduct.css';
@@ -133,8 +134,8 @@ const AddProduct = () => {
 
 export default AddProduct;
 
-
- */
+*/
+ 
 
 /* import React, { useState } from 'react';
 import './AddProduct.css';
@@ -376,6 +377,7 @@ const AddProduct = ({ backUrl, allProducts, setAllProducts }) => {
 export default AddProduct;
 */
 
+/*
 import React, { useState } from 'react';
 import './AddProduct.css';
 
@@ -499,3 +501,131 @@ const AddProduct = ({ backUrl, allProducts, setAllProducts, fetchProducts }) => 
 };
 
 export default AddProduct;
+*/
+
+
+import React, { useState, useEffect } from 'react';
+import './AddProduct.css';
+import upload_area from '../../assets/upload_area.svg';
+
+const AddProduct = ({ backUrl, allProducts, setAllProducts }) => {
+  const [image, setImage] = useState(null);
+  const [productDetails, setProductDetails] = useState({
+    name: '',
+    old_price: '',
+    new_price: '',
+    category: 'women',
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProductDetails(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  // Cleanup object URL
+  useEffect(() => {
+    return () => {
+      if (image) URL.revokeObjectURL(image);
+    };
+  }, [image]);
+
+  const addProduct = async () => {
+    if (!productDetails.name || !productDetails.old_price || !productDetails.new_price || !image) {
+      alert("Please fill in all fields and upload an image.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Upload image first
+      const formData = new FormData();
+      formData.append('product', image);
+
+      const uploadResponse = await fetch(`${backUrl}/upload`, { method: 'POST', body: formData });
+      const uploadData = await uploadResponse.json();
+      if (!uploadData.success) {
+        alert("Image upload failed");
+        setLoading(false);
+        return;
+      }
+
+      const newProduct = { ...productDetails, image: uploadData.imageUrl };
+
+      const res = await fetch(`${backUrl}/addproduct`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Product added successfully!");
+
+        // Update state for live list
+        setAllProducts([{ ...newProduct, id: data.id || Date.now() }, ...allProducts]);
+
+        // Reset form
+        setProductDetails({ name: '', old_price: '', new_price: '', category: 'women' });
+        setImage(null);
+      } else {
+        alert("Failed to add product");
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className='add-product'>
+      <div className="add-product-item-field">
+        <p>Product Title</p>
+        <input type="text" name="name" value={productDetails.name} onChange={handleInputChange} />
+      </div>
+
+      <div className="addproduct-price">
+        <div className="add-product-item-field">
+          <p>Product Price</p>
+          <input type="number" name="old_price" value={productDetails.old_price} onChange={handleInputChange} />
+        </div>
+        <div className="add-product-item-field">
+          <p>Offer Price</p>
+          <input type="number" name="new_price" value={productDetails.new_price} onChange={handleInputChange} />
+        </div>
+      </div>
+
+      <div className="add-product-item-field">
+        <p>Category</p>
+        <select name="category" value={productDetails.category} onChange={handleInputChange}>
+          <option value="women">Women</option>
+          <option value="men">Men</option>
+          <option value="kids">Kids</option>
+        </select>
+      </div>
+
+      <div className="add-product-item-field">
+        <label htmlFor="file-input">
+          <img
+            src={image ? URL.createObjectURL(image) : upload_area}
+            className='addproduct-thumbnail-img'
+            alt="Upload"
+          />
+        </label>
+        <input type="file" id="file-input" hidden onChange={handleImageChange} />
+      </div>
+
+      <button className='add-product-button' onClick={addProduct} disabled={loading}>
+        {loading ? "Adding..." : "Add Product"}
+      </button>
+    </div>
+  );
+};
+
+export default AddProduct;
+

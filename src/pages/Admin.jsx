@@ -159,7 +159,7 @@ const Admin = () => {
       <SideBar />
       <Routes>
         <Route
-          path="/addproduct"
+          path="/addProduct"
           element={
             <AddProduct 
               backUrl={backUrl}
@@ -170,7 +170,7 @@ const Admin = () => {
           }
         />
         <Route
-          path="/listproduct"
+          path="/listProduct"
           element={
             <ListProduct
               backUrl={backUrl}
